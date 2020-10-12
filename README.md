@@ -10,21 +10,21 @@
 
 **Table of Contents**
 
-- [@skyra/audio](#skyraaudio)
-  - [About](#about)
-  - [Installation and Usage](#installation-and-usage)
-    - [Package managers](#package-managers)
-      - [Usage](#usage)
-  - [Meta](#meta)
-    - [License](#license)
-    - [Contributing](#contributing)
-    - [Buy us some doughnuts](#buy-us-some-doughnuts)
-    - [Contributors ✨](#contributors-%E2%9C%A8)
+-   [@skyra/audio](#skyraaudio)
+    -   [About](#about)
+    -   [Installation and Usage](#installation-and-usage)
+        -   [Package managers](#package-managers)
+            -   [Usage](#usage)
+    -   [Meta](#meta)
+        -   [License](#license)
+        -   [Contributing](#contributing)
+        -   [Buy us some doughnuts](#buy-us-some-doughnuts)
+        -   [Contributors ✨](#contributors-%E2%9C%A8)
 
 ## About
 
-- A JavaScript wrapper for the [Lavalink](https://github.com/Frederikam/Lavalink) audio client for Discord. Only supports Lavalink v3.
-- This is a derivative work of [lavalink.js](https://github.com/lavalibs/lavalink.js), this wouldn't be possible without the author's work.
+-   A JavaScript wrapper for the [Lavalink](https://github.com/Frederikam/Lavalink) audio client for Discord. Only supports Lavalink v3.
+-   This is a derivative work of [lavalink.js](https://github.com/lavalibs/lavalink.js), this wouldn't be possible without the author's work.
 
 ## Installation and Usage
 
@@ -38,29 +38,27 @@ yarn add @skyra/audio
 #### Usage
 
 ```js
-const { Node } = require("@skyra/audio");
+const { Node } = require('@skyra/audio');
 
 const node = new Node({
-  password: "", // your Lavalink password
-  userID: "", // the user ID of your bot
-  shardCount: 0, // the total number of shards that your bot is running (optional, useful if you're load balancing)
-  hosts: {
-    rest: "", // the http host of your lavalink instance (optional)
-    ws: "", // the ws host of your lavalink instance (optional)
-  },
-  host: "", // a URL to your lavalink instance without protocol (optional, can be used instead of specifying hosts option)
-  send(guildID, packet) {
-    // send this packet to the gateway
-    // you are responsible for properly serializing and encoding the packet for transmission
-    return gateway.connections
-      .get(Long.fromString(guildID).shiftRight(22).mod(this.shardCount))
-      .send(packet);
-  },
+	password: '', // your Lavalink password
+	userID: '', // the user ID of your bot
+	shardCount: 0, // the total number of shards that your bot is running (optional, useful if you're load balancing)
+	hosts: {
+		rest: '', // the http host of your lavalink instance (optional)
+		ws: '' // the ws host of your lavalink instance (optional)
+	},
+	host: '', // a URL to your lavalink instance without protocol (optional, can be used instead of specifying hosts option)
+	send(guildID, packet) {
+		// send this packet to the gateway
+		// you are responsible for properly serializing and encoding the packet for transmission
+		return gateway.connections.get(Long.fromString(guildID).shiftRight(22).mod(this.shardCount)).send(packet);
+	}
 });
 ```
 
 ```ts
-import { Node } from "@skyra/audio";
+import { Node } from '@skyra/audio';
 
 // Same as before
 ```

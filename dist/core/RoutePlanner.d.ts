@@ -1,44 +1,41 @@
-import type { Http } from "./Http";
-export declare type RoutePlannerStatus =
-  | RotatingIpRoutePlanner
-  | NanoIpRoutePlanner
-  | RotatingIpRoutePlanner;
+import type { Http } from './Http';
+export declare type RoutePlannerStatus = RotatingIpRoutePlanner | NanoIpRoutePlanner | RotatingIpRoutePlanner;
 export interface BaseRoutePlannerStatusDetails {
-  ipBlock: {
-    type: string;
-    size: string;
-  };
-  failingAddresses: {
-    address: string;
-    failingTimestamp: number;
-    failingTime: string;
-  }[];
+    ipBlock: {
+        type: string;
+        size: string;
+    };
+    failingAddresses: {
+        address: string;
+        failingTimestamp: number;
+        failingTime: string;
+    }[];
 }
 export interface RotatingIpRoutePlanner {
-  class: "RotatingIpRoutePlanner";
-  details: BaseRoutePlannerStatusDetails & {
-    rotateIndex: string;
-    ipIndex: string;
-    currentAddress: string;
-  };
+    class: 'RotatingIpRoutePlanner';
+    details: BaseRoutePlannerStatusDetails & {
+        rotateIndex: string;
+        ipIndex: string;
+        currentAddress: string;
+    };
 }
 export interface NanoIpRoutePlanner {
-  class: "NanoIpRoutePlanner";
-  details: BaseRoutePlannerStatusDetails & {
-    currentAddressIndex: number;
-  };
+    class: 'NanoIpRoutePlanner';
+    details: BaseRoutePlannerStatusDetails & {
+        currentAddressIndex: number;
+    };
 }
 export interface RotatingNanoIpRoutePlanner {
-  class: "RotatingNanoIpRoutePlanner";
-  details: BaseRoutePlannerStatusDetails & {
-    blockIndex: string;
-    currentAddressIndex: number;
-  };
+    class: 'RotatingNanoIpRoutePlanner';
+    details: BaseRoutePlannerStatusDetails & {
+        blockIndex: string;
+        currentAddressIndex: number;
+    };
 }
 export declare class RoutePlanner {
-  readonly http: Http;
-  constructor(http: Http);
-  status(): Promise<RoutePlannerStatus>;
-  unmark(address?: string): Promise<void>;
+    readonly http: Http;
+    constructor(http: Http);
+    status(): Promise<RoutePlannerStatus>;
+    unmark(address?: string): Promise<void>;
 }
 //# sourceMappingURL=RoutePlanner.d.ts.map

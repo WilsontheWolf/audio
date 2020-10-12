@@ -1,48 +1,48 @@
-import { EventEmitter } from "events";
-import { ClusterNode } from "../ClusterNode";
+import { EventEmitter } from 'events';
+import { ClusterNode } from '../ClusterNode';
 export class BaseCluster extends EventEmitter {
-  constructor(options) {
-    super();
-    this.nodes = [];
-    if (options) this.spawn(options);
-  }
-  spawn(options) {
-    if (Array.isArray(options)) return options.map((opt) => this.spawn(opt));
-    const node = new ClusterNode(this, options);
-    this.nodes.push(node);
-    return node;
-  }
-  sort() {
-    return this.nodes
-      .filter((n) => n.connected)
-      .sort((a, b) => {
-        // sort by overall system cpu load
-        if (!a.stats || !b.stats) return -1;
-        return (
-          (a.stats.cpu ? a.stats.cpu.systemLoad / a.stats.cpu.cores : 0) -
-          (b.stats.cpu ? b.stats.cpu.systemLoad / b.stats.cpu.cores : 0)
-        );
-      });
-  }
-  getNode(guildID) {
-    let node = this.nodes.find((node) => node.players.has(guildID));
-    if (!node) node = this.sort().find((node) => this.filter(node, guildID));
-    if (node) return node;
-    throw new Error(
-      "unable to find appropriate node; please check your filter"
-    );
-  }
-  has(guildID) {
-    return this.nodes.some((node) => node.players.has(guildID));
-  }
-  get(guildID) {
-    return this.getNode(guildID).players.get(guildID);
-  }
-  voiceStateUpdate(state) {
-    return this.getNode(state.guild_id).voiceStateUpdate(state);
-  }
-  voiceServerUpdate(server) {
-    return this.getNode(server.guild_id).voiceServerUpdate(server);
-  }
+    constructor(options) {
+        super();
+        this.nodes = [];
+        if (options)
+            this.spawn(options);
+    }
+    spawn(options) {
+        if (Array.isArray(options))
+            return options.map((opt) => this.spawn(opt));
+        const node = new ClusterNode(this, options);
+        this.nodes.push(node);
+        return node;
+    }
+    sort() {
+        return this.nodes
+            .filter((n) => n.connected)
+            .sort((a, b) => {
+            // sort by overall system cpu load
+            if (!a.stats || !b.stats)
+                return -1;
+            return ((a.stats.cpu ? a.stats.cpu.systemLoad / a.stats.cpu.cores : 0) - (b.stats.cpu ? b.stats.cpu.systemLoad / b.stats.cpu.cores : 0));
+        });
+    }
+    getNode(guildID) {
+        let node = this.nodes.find((node) => node.players.has(guildID));
+        if (!node)
+            node = this.sort().find((node) => this.filter(node, guildID));
+        if (node)
+            return node;
+        throw new Error('unable to find appropriate node; please check your filter');
+    }
+    has(guildID) {
+        return this.nodes.some((node) => node.players.has(guildID));
+    }
+    get(guildID) {
+        return this.getNode(guildID).players.get(guildID);
+    }
+    voiceStateUpdate(state) {
+        return this.getNode(state.guild_id).voiceStateUpdate(state);
+    }
+    voiceServerUpdate(server) {
+        return this.getNode(server.guild_id).voiceServerUpdate(server);
+    }
 }
 //# sourceMappingURL=BaseCluster.js.map
