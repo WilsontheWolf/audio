@@ -25,10 +25,12 @@ export class BaseNode extends EventEmitter {
                     typeof hosts.ws === 'string' ? new Connection(this, hosts.ws) : new Connection(this, hosts.ws.url, hosts.ws.options);
         }
     }
+    connect() {
+        this.connection.connect();
+    }
     get connected() {
-        if (!this.connection)
-            return false;
-        return this.connection.ws.readyState === WebSocket.OPEN;
+        var _a, _b;
+        return ((_b = (_a = this.connection) === null || _a === void 0 ? void 0 : _a.ws) === null || _b === void 0 ? void 0 : _b.readyState) === WebSocket.OPEN;
     }
     load(identifier) {
         if (this.http)
@@ -44,7 +46,7 @@ export class BaseNode extends EventEmitter {
         if (packet.user_id !== this.userID)
             return Promise.resolve(false);
         if (packet.channel_id) {
-            this.voiceStates.set(packet.guild_id, packet.session_id);
+            this.voiceStates.set(packet.guild_id, packet);
             return this._tryConnection(packet.guild_id);
         }
         this.voiceServers.delete(packet.guild_id);
@@ -70,7 +72,7 @@ export class BaseNode extends EventEmitter {
         const server = this.voiceServers.get(guildID);
         if (!state || !server || !this._expectingConnection.has(guildID))
             return false;
-        await this.players.get(guildID).voiceUpdate(state, server);
+        await this.players.get(guildID).voiceUpdate(state.session_id, server);
         this._expectingConnection.delete(guildID);
         return true;
     }

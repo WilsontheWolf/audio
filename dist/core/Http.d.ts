@@ -47,7 +47,7 @@ export declare class Http {
     base: string | undefined;
     routeplanner: RoutePlanner;
     constructor(node: BaseNode, input: string, base?: string);
-    url(): URL;
+    get url(): URL;
     load(identifier: string): Promise<TrackResponse>;
     decode(track: string): Promise<TrackInfo>;
     decode(tracks: string[]): Promise<Track[]>;

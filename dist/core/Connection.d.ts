@@ -1,6 +1,6 @@
-import { Backoff } from 'backoff';
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 import type { BaseNode } from '../base/BaseNode';
+import type { OutgoingPayload } from '../types/OutgoingPayloads';
 export interface Options extends WebSocket.ClientOptions {
     resumeKey?: string;
     resumeTimeout?: number;
@@ -10,21 +10,29 @@ export declare class Connection<T extends BaseNode = BaseNode> {
     url: string;
     options: Options;
     resumeKey?: string;
-    ws: WebSocket;
-    reconnectTimeout: number;
-    private _backoff;
-    private _listeners;
+    ws: WebSocket | null;
+    private backoff;
     private _queue;
+    private _send;
+    private _open;
+    private _close;
+    private _upgrade;
+    private _message;
+    private _error;
     constructor(node: T, url: string, options?: Options);
-    get backoff(): Backoff;
-    set backoff(b: Backoff);
     connect(): void;
     configureResuming(timeout?: number, key?: string): Promise<void>;
-    send(d: object): Promise<void>;
+    send(d: OutgoingPayload): Promise<void>;
     close(code?: number, data?: string): Promise<void>;
+    private _connect;
     private _reconnect;
     private _registerWSEventListeners;
     private _flush;
-    private _send;
+    private wsSend;
+    private onOpen;
+    private onClose;
+    private onUpgrade;
+    private onMessage;
+    private onError;
 }
 //# sourceMappingURL=Connection.d.ts.map

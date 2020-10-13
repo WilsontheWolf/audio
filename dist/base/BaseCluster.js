@@ -7,6 +7,10 @@ export class BaseCluster extends EventEmitter {
         if (options)
             this.spawn(options);
     }
+    connect() {
+        for (const node of this.nodes)
+            node.connect();
+    }
     spawn(options) {
         if (Array.isArray(options))
             return options.map((opt) => this.spawn(opt));

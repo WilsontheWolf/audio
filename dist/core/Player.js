@@ -1,78 +1,62 @@
 import { EventEmitter } from 'events';
-export var Status;
-(function (Status) {
-    Status[Status["INSTANTIATED"] = 0] = "INSTANTIATED";
-    Status[Status["PLAYING"] = 1] = "PLAYING";
-    Status[Status["PAUSED"] = 2] = "PAUSED";
-    Status[Status["ENDED"] = 3] = "ENDED";
-    Status[Status["ERRORED"] = 4] = "ERRORED";
-    Status[Status["STUCK"] = 5] = "STUCK";
-    Status[Status["UNKNOWN"] = 6] = "UNKNOWN";
-})(Status || (Status = {}));
-export var EventType;
-(function (EventType) {
-    EventType["TRACK_START"] = "TrackStartEvent";
-    EventType["TRACK_END"] = "TrackEndEvent";
-    EventType["TRACK_EXCEPTION"] = "TrackExceptionEvent";
-    EventType["TRACK_STUCK"] = "TrackStuckEvent";
-    EventType["WEBSOCKET_CLOSED"] = "WebSocketClosedEvent";
-})(EventType || (EventType = {}));
 export class Player extends EventEmitter {
     constructor(node, guildID) {
         super();
-        this.status = Status.INSTANTIATED;
+        this.status = 0 /* Instantiated */;
         this.node = node;
         this.guildID = guildID;
         this.on('event', (d) => {
             switch (d.type) {
-                case EventType.TRACK_START:
-                    this.status = Status.PLAYING;
+                case 'TrackStartEvent':
+                    this.status = 1 /* Playing */;
                     break;
-                case EventType.TRACK_END:
+                case 'TrackEndEvent':
                     if (d.reason !== 'REPLACED')
-                        this.status = Status.ENDED;
+                        this.status = 3 /* Ended */;
                     break;
-                case EventType.TRACK_EXCEPTION:
-                    this.status = Status.ERRORED;
+                case 'TrackExceptionEvent':
+                    this.status = 4 /* Errored */;
                     break;
-                case EventType.TRACK_STUCK:
-                    this.status = Status.STUCK;
+                case 'TrackStuckEvent':
+                    this.status = 5 /* Stuck */;
                     break;
-                case EventType.WEBSOCKET_CLOSED:
-                    this.status = Status.ENDED;
+                case 'WebSocketClosedEvent':
+                    this.status = 3 /* Ended */;
                     break;
                 default:
-                    this.status = Status.UNKNOWN;
+                    this.status = 6 /* Unknown */;
                     break;
             }
         });
     }
     get playing() {
-        return this.status === Status.PLAYING;
+        return this.status === 1 /* Playing */;
     }
     get paused() {
-        return this.status === Status.PAUSED;
+        return this.status === 2 /* Paused */;
     }
     get voiceState() {
         const session = this.node.voiceStates.get(this.guildID);
         if (!session)
-            return;
+            return null;
         return {
+            ...session,
             guild_id: this.guildID,
-            user_id: this.node.userID,
-            session_id: session
+            user_id: this.node.userID
         };
     }
     get voiceServer() {
-        return this.node.voiceServers.get(this.guildID);
+        var _a;
+        return (_a = this.node.voiceServers.get(this.guildID)) !== null && _a !== void 0 ? _a : null;
     }
     async moveTo(node) {
         if (this.node === node)
             return;
-        if (!this.voiceServer || !this.voiceState)
+        const { voiceState, voiceServer } = this;
+        if (voiceServer === null || voiceState === null)
             throw new Error('no voice state/server data to move');
         await this.destroy();
-        await Promise.all([node.voiceStateUpdate(this.voiceState), node.voiceServerUpdate(this.voiceServer)]);
+        await Promise.all([node.voiceStateUpdate(voiceState), node.voiceServerUpdate(voiceServer)]);
     }
     leave() {
         return this.join(null);
@@ -100,7 +84,7 @@ export class Player extends EventEmitter {
             endTime: end,
             noReplace
         });
-        this.status = Status.PLAYING;
+        this.status = 1 /* Playing */;
     }
     setVolume(volume) {
         return this.send({
@@ -130,16 +114,16 @@ export class Player extends EventEmitter {
             pause
         });
         if (pause)
-            this.status = Status.PAUSED;
+            this.status = 2 /* Paused */;
         else
-            this.status = Status.PLAYING;
+            this.status = 1 /* Playing */;
     }
     async stop() {
         await this.send({
             op: 'stop',
             guildId: this.guildID
         });
-        this.status = Status.ENDED;
+        this.status = 3 /* Ended */;
     }
     async destroy() {
         if (this.node.connected) {
@@ -148,18 +132,14 @@ export class Player extends EventEmitter {
                 guildId: this.guildID
             });
         }
-        this.status = Status.ENDED;
+        this.status = 3 /* Ended */;
         this.node.players.delete(this.guildID);
     }
     voiceUpdate(sessionId, event) {
         return this.send({
             op: 'voiceUpdate',
             guildId: this.guildID,
-            event: {
-                endpoint: event.endpoint,
-                guildId: event.guild_id,
-                token: event.token
-            },
+            event,
             sessionId
         });
     }

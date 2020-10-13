@@ -15,6 +15,7 @@ export declare abstract class BaseCluster extends EventEmitter {
     abstract filter: ClusterFilter;
     readonly nodes: ClusterNode[];
     constructor(options?: ClusterNodeOptions[]);
+    connect(): void;
     spawn(options: ClusterNodeOptions): ClusterNode;
     spawn(options: ClusterNodeOptions[]): ClusterNode[];
     sort(): ClusterNode[];
