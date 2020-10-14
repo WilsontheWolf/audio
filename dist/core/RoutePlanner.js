@@ -1,4 +1,7 @@
-export class RoutePlanner {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RoutePlanner = void 0;
+class RoutePlanner {
     constructor(http) {
         this.http = http;
     }
@@ -17,4 +20,5 @@ export class RoutePlanner {
         return this.http.do('post', url);
     }
 }
+exports.RoutePlanner = RoutePlanner;
 //# sourceMappingURL=RoutePlanner.js.map

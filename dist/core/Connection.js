@@ -1,8 +1,11 @@
-import { exponential } from 'backoff';
-import WebSocket from 'ws';
-export class Connection {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Connection = void 0;
+const backoff_1 = require("backoff");
+const ws_1 = require("ws");
+class Connection {
     constructor(node, url, options = {}) {
-        this.backoff = exponential();
+        this.backoff = backoff_1.exponential();
         this._queue = [];
         this.node = node;
         this.url = url;
@@ -39,7 +42,7 @@ export class Connection {
         return new Promise((resolve, reject) => {
             const encoded = JSON.stringify(d);
             const send = { resolve, reject, data: encoded };
-            if (this.ws.readyState === WebSocket.OPEN)
+            if (this.ws.readyState === ws_1.default.OPEN)
                 this.wsSend(send);
             else
                 this._queue.push(send);
@@ -61,7 +64,7 @@ export class Connection {
     }
     _connect() {
         var _a;
-        if (((_a = this.ws) === null || _a === void 0 ? void 0 : _a.readyState) === WebSocket.OPEN)
+        if (((_a = this.ws) === null || _a === void 0 ? void 0 : _a.readyState) === ws_1.default.OPEN)
             this.ws.close();
         const headers = {
             Authorization: this.node.password,
@@ -70,11 +73,11 @@ export class Connection {
         };
         if (this.resumeKey)
             headers['Resume-Key'] = this.resumeKey;
-        this.ws = new WebSocket(this.url, { headers, ...this.options });
+        this.ws = new ws_1.default(this.url, { headers, ...this.options });
         this._registerWSEventListeners();
     }
     _reconnect() {
-        if (this.ws.readyState === WebSocket.CLOSED)
+        if (this.ws.readyState === ws_1.default.CLOSED)
             this.backoff.backoff();
     }
     _registerWSEventListeners() {
@@ -138,4 +141,5 @@ export class Connection {
         this._reconnect();
     }
 }
+exports.Connection = Connection;
 //# sourceMappingURL=Connection.js.map

@@ -1,8 +1,12 @@
-import { BaseNode } from './base/BaseNode';
-export class Node extends BaseNode {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Node = void 0;
+const BaseNode_1 = require("./base/BaseNode");
+class Node extends BaseNode_1.BaseNode {
     constructor(options) {
         super(options);
         this.send = options.send;
     }
 }
+exports.Node = Node;
 //# sourceMappingURL=Node.js.map

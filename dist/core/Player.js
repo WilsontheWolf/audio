@@ -1,5 +1,18 @@
-import { EventEmitter } from 'events';
-export class Player extends EventEmitter {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Player = exports.Status = void 0;
+const events_1 = require("events");
+var Status;
+(function (Status) {
+    Status[Status["Instantiated"] = 0] = "Instantiated";
+    Status[Status["Playing"] = 1] = "Playing";
+    Status[Status["Paused"] = 2] = "Paused";
+    Status[Status["Ended"] = 3] = "Ended";
+    Status[Status["Errored"] = 4] = "Errored";
+    Status[Status["Stuck"] = 5] = "Stuck";
+    Status[Status["Unknown"] = 6] = "Unknown";
+})(Status = exports.Status || (exports.Status = {}));
+class Player extends events_1.EventEmitter {
     constructor(node, guildID) {
         super();
         this.status = 0 /* Instantiated */;
@@ -150,4 +163,5 @@ export class Player extends EventEmitter {
         return Promise.reject(new Error('no WebSocket connection available'));
     }
 }
+exports.Player = Player;
 //# sourceMappingURL=Player.js.map

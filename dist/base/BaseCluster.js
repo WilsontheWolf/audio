@@ -1,6 +1,9 @@
-import { EventEmitter } from 'events';
-import { ClusterNode } from '../ClusterNode';
-export class BaseCluster extends EventEmitter {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseCluster = void 0;
+const events_1 = require("events");
+const ClusterNode_1 = require("../ClusterNode");
+class BaseCluster extends events_1.EventEmitter {
     constructor(options) {
         super();
         this.nodes = [];
@@ -14,7 +17,7 @@ export class BaseCluster extends EventEmitter {
     spawn(options) {
         if (Array.isArray(options))
             return options.map((opt) => this.spawn(opt));
-        const node = new ClusterNode(this, options);
+        const node = new ClusterNode_1.ClusterNode(this, options);
         this.nodes.push(node);
         return node;
     }
@@ -49,4 +52,5 @@ export class BaseCluster extends EventEmitter {
         return this.getNode(server.guild_id).voiceServerUpdate(server);
     }
 }
+exports.BaseCluster = BaseCluster;
 //# sourceMappingURL=BaseCluster.js.map

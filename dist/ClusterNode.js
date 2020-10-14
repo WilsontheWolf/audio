@@ -1,5 +1,8 @@
-import { BaseNode } from './base/BaseNode';
-export class ClusterNode extends BaseNode {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ClusterNode = void 0;
+const BaseNode_1 = require("./base/BaseNode");
+class ClusterNode extends BaseNode_1.BaseNode {
     constructor(cluster, options) {
         super(options);
         this.cluster = cluster;
@@ -18,4 +21,5 @@ export class ClusterNode extends BaseNode {
         this.cluster.nodes.splice(this.cluster.nodes.indexOf(this), 1);
     }
 }
+exports.ClusterNode = ClusterNode;
 //# sourceMappingURL=ClusterNode.js.map

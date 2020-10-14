@@ -1,9 +1,12 @@
-import { EventEmitter } from 'events';
-import WebSocket from 'ws';
-import { Connection } from '../core/Connection';
-import { Http } from '../core/Http';
-import { PlayerStore } from '../core/PlayerStore';
-export class BaseNode extends EventEmitter {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseNode = void 0;
+const events_1 = require("events");
+const ws_1 = require("ws");
+const Connection_1 = require("../core/Connection");
+const Http_1 = require("../core/Http");
+const PlayerStore_1 = require("../core/PlayerStore");
+class BaseNode extends events_1.EventEmitter {
     constructor({ password, userID, shardCount, hosts, host }) {
         super();
         this.http = null;
@@ -14,17 +17,17 @@ export class BaseNode extends EventEmitter {
         this.password = password;
         this.userID = userID;
         this.shardCount = shardCount;
-        this.players = new PlayerStore(this);
+        this.players = new PlayerStore_1.PlayerStore(this);
         if (host) {
-            this.http = new Http(this, `http://${host}`);
-            this.connection = new Connection(this, `ws://${host}`);
+            this.http = new Http_1.Http(this, `http://${host}`);
+            this.connection = new Connection_1.Connection(this, `ws://${host}`);
         }
         else if (hosts) {
-            this.http = hosts.rest ? new Http(this, hosts.rest) : null;
+            this.http = hosts.rest ? new Http_1.Http(this, hosts.rest) : null;
             this.connection = hosts.ws
                 ? typeof hosts.ws === 'string'
-                    ? new Connection(this, hosts.ws)
-                    : new Connection(this, hosts.ws.url, hosts.ws.options)
+                    ? new Connection_1.Connection(this, hosts.ws)
+                    : new Connection_1.Connection(this, hosts.ws.url, hosts.ws.options)
                 : null;
         }
     }
@@ -39,7 +42,7 @@ export class BaseNode extends EventEmitter {
      */
     get connected() {
         var _a, _b;
-        return ((_b = (_a = this.connection) === null || _a === void 0 ? void 0 : _a.ws) === null || _b === void 0 ? void 0 : _b.readyState) === WebSocket.OPEN;
+        return ((_b = (_a = this.connection) === null || _a === void 0 ? void 0 : _a.ws) === null || _b === void 0 ? void 0 : _b.readyState) === ws_1.default.OPEN;
     }
     /**
      * Loads a song.
@@ -144,4 +147,5 @@ export class BaseNode extends EventEmitter {
         return true;
     }
 }
+exports.BaseNode = BaseNode;
 //# sourceMappingURL=BaseNode.js.map

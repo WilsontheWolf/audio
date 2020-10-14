@@ -1,9 +1,12 @@
-import { request, STATUS_CODES } from 'http';
-import { URL } from 'url';
-import { RoutePlanner } from './RoutePlanner';
-export class HTTPError extends Error {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Http = exports.LoadType = exports.HTTPError = void 0;
+const http_1 = require("http");
+const url_1 = require("url");
+const RoutePlanner_1 = require("./RoutePlanner");
+class HTTPError extends Error {
     constructor(httpMessage, method, url) {
-        super(`${httpMessage.statusCode} ${STATUS_CODES[httpMessage.statusCode]}`);
+        super(`${httpMessage.statusCode} ${http_1.STATUS_CODES[httpMessage.statusCode]}`);
         this.statusCode = httpMessage.statusCode;
         this.headers = httpMessage.headers;
         this.name = this.constructor.name;
@@ -11,10 +14,11 @@ export class HTTPError extends Error {
         this.method = method;
     }
     get statusMessage() {
-        return STATUS_CODES[this.statusCode];
+        return http_1.STATUS_CODES[this.statusCode];
     }
 }
-export var LoadType;
+exports.HTTPError = HTTPError;
+var LoadType;
 (function (LoadType) {
     /**
      * A single track is loaded.
@@ -36,16 +40,16 @@ export var LoadType;
      * Lavaplayer failed to load something for some reason.
      */
     LoadType["LoadFailed"] = "LOAD_FAILED";
-})(LoadType || (LoadType = {}));
-export class Http {
+})(LoadType = exports.LoadType || (exports.LoadType = {}));
+class Http {
     constructor(node, input, base) {
         this.node = node;
         this.input = input;
         this.base = base;
-        this.routeplanner = new RoutePlanner(this);
+        this.routeplanner = new RoutePlanner_1.RoutePlanner(this);
     }
     get url() {
-        return new URL(this.input, this.base);
+        return new url_1.URL(this.input, this.base);
     }
     load(identifier) {
         const { url } = this;
@@ -65,7 +69,7 @@ export class Http {
     }
     async do(method, url, data) {
         const message = await new Promise((resolve) => {
-            const req = request({
+            const req = http_1.request({
                 method,
                 hostname: url.hostname,
                 port: url.port,
@@ -92,4 +96,5 @@ export class Http {
         throw new HTTPError(message, method, url);
     }
 }
+exports.Http = Http;
 //# sourceMappingURL=Http.js.map

@@ -1,8 +1,11 @@
-import { Player } from './Player';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PlayerStore = void 0;
+const Player_1 = require("./Player");
 /**
  * Represents a collection of players.
  */
-export class PlayerStore extends Map {
+class PlayerStore extends Map {
     constructor(node) {
         super();
         this.node = node;
@@ -14,10 +17,11 @@ export class PlayerStore extends Map {
     get(key) {
         let player = super.get(key);
         if (!player) {
-            player = new Player(this.node, key);
+            player = new Player_1.Player(this.node, key);
             this.set(key, player);
         }
         return player;
     }
 }
+exports.PlayerStore = PlayerStore;
 //# sourceMappingURL=PlayerStore.js.map
