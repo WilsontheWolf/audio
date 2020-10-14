@@ -20,6 +20,9 @@ export declare class Connection<T extends BaseNode = BaseNode> {
     private _message;
     private _error;
     constructor(node: T, url: string, options?: Options);
+    /**
+     * Connects to the server.
+     */
     connect(): void;
     configureResuming(timeout?: number, key?: string): Promise<void>;
     send(d: OutgoingPayload): Promise<void>;

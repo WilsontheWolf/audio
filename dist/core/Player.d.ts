@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { EventEmitter } from 'events';
 import type { BaseNode, VoiceServerUpdate, VoiceStateUpdate } from '../base/BaseNode';
-import type { OutgoingPayload } from '../types/OutgoingPayloads';
+import type { OutgoingEqualizerPayload, OutgoingPayload } from '../types/OutgoingPayloads';
 import type { Track } from './Http';
 export declare const enum Status {
     Instantiated = 0,
@@ -17,10 +17,7 @@ export interface PlayerOptions {
     end?: number;
     noReplace?: boolean;
 }
-export interface EqualizerBand {
-    band: number;
-    gain: number;
-}
+export declare type EqualizerBand = OutgoingEqualizerPayload['bands'];
 export interface JoinOptions {
     mute?: boolean;
     deaf?: boolean;
@@ -39,7 +36,7 @@ export declare class Player<T extends BaseNode = BaseNode> extends EventEmitter 
     join(channel: string | null, { deaf, mute }?: JoinOptions): Promise<any>;
     play(track: string | Track, { start, end, noReplace }?: PlayerOptions): Promise<void>;
     setVolume(volume: number): Promise<void>;
-    setEqualizer(bands: readonly EqualizerBand[]): Promise<void>;
+    setEqualizer(bands: EqualizerBand): Promise<void>;
     seek(position: number): Promise<void>;
     pause(pause?: boolean): Promise<void>;
     stop(): Promise<void>;

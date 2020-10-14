@@ -16,6 +16,9 @@ export class Connection {
         this._message = this.onMessage.bind(this);
         this._error = this.onError.bind(this);
     }
+    /**
+     * Connects to the server.
+     */
     connect() {
         // Create a new ready listener if none was set.
         if (!this.backoff.listenerCount('ready')) {

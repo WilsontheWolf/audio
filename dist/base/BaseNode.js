@@ -1,11 +1,13 @@
-import WebSocket from 'ws';
 import { EventEmitter } from 'events';
+import WebSocket from 'ws';
 import { Connection } from '../core/Connection';
 import { Http } from '../core/Http';
 import { PlayerStore } from '../core/PlayerStore';
 export class BaseNode extends EventEmitter {
     constructor({ password, userID, shardCount, hosts, host }) {
         super();
+        this.http = null;
+        this.connection = null;
         this.voiceStates = new Map();
         this.voiceServers = new Map();
         this._expectingConnection = new Set();
@@ -18,20 +20,85 @@ export class BaseNode extends EventEmitter {
             this.connection = new Connection(this, `ws://${host}`);
         }
         else if (hosts) {
-            if (hosts.rest)
-                this.http = new Http(this, hosts.rest);
-            if (hosts.ws)
-                this.connection =
-                    typeof hosts.ws === 'string' ? new Connection(this, hosts.ws) : new Connection(this, hosts.ws.url, hosts.ws.options);
+            this.http = hosts.rest ? new Http(this, hosts.rest) : null;
+            this.connection = hosts.ws
+                ? typeof hosts.ws === 'string'
+                    ? new Connection(this, hosts.ws)
+                    : new Connection(this, hosts.ws.url, hosts.ws.options)
+                : null;
         }
     }
+    /**
+     * Connects to the server.
+     */
     connect() {
         this.connection.connect();
     }
+    /**
+     * Whether or not the node is connected to the websocket.
+     */
     get connected() {
         var _a, _b;
         return ((_b = (_a = this.connection) === null || _a === void 0 ? void 0 : _a.ws) === null || _b === void 0 ? void 0 : _b.readyState) === WebSocket.OPEN;
     }
+    /**
+     * Loads a song.
+     * @param identifier The track to be loaded.
+     * @example
+     * ```typescript
+     * // Load from URL:
+     *
+     * const result = await node.load('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+     * console.log(result);
+     * // {
+     * //   "loadType": "TRACK_LOADED",
+     * //   "playlistInfo": {},
+     * //   "tracks": [
+     * //     {
+     * //       "track": "QAAAjQIAJVJpY2sgQXN0bGV5IC0gTmV2ZXIgR29ubmEgR2l2ZSBZb3UgVXAADlJpY2tBc3RsZXlWRVZPAAAAAAADPCAAC2RRdzR3OVdnWGNRAAEAK2h0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9ZFF3NHc5V2dYY1EAB3lvdXR1YmUAAAAAAAAAAA==",
+     * //       "info": {
+     * //         "identifier": "dQw4w9WgXcQ",
+     * //         "isSeekable": true,
+     * //         "author": "RickAstleyVEVO",
+     * //         "length": 212000,
+     * //         "isStream": false,
+     * //         "position": 0,
+     * //         "title": "Rick Astley - Never Gonna Give You Up",
+     * //         "uri": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+     * //       }
+     * //     }
+     * //   ]
+     * // }
+     * ```
+     *
+     * @example
+     * ```typescript
+     * // Load from YouTube search:
+     *
+     * const result = await node.load('ytsearch: Never Gonna Give You Up');
+     * console.log(result);
+     * // {
+     * //   "loadType": "SEARCH_RESULT",
+     * //   "playlistInfo": {},
+     * //   "tracks": [
+     * //     {
+     * //       "track": "...",
+     * //       "info": {
+     * //         "identifier": "dQw4w9WgXcQ",
+     * //         "isSeekable": true,
+     * //         "author": "RickAstleyVEVO",
+     * //         "length": 212000,
+     * //         "isStream": false,
+     * //         "position": 0,
+     * //         "title": "Rick Astley - Never Gonna Give You Up",
+     * //         "uri": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+     * //       }
+     * //     },
+     * //     ...
+     * //   ]
+     * // }
+     * ```
+     */
     load(identifier) {
         if (this.http)
             return this.http.load(identifier);

@@ -16,11 +16,26 @@ export class HTTPError extends Error {
 }
 export var LoadType;
 (function (LoadType) {
-    LoadType["TRACK_LOADED"] = "TRACK_LOADED";
-    LoadType["PLAYLIST_LOADED"] = "PLAYLIST_LOADED";
-    LoadType["SEARCH_RESULT"] = "SEARCH_RESULT";
-    LoadType["NO_MATCHES"] = "NO_MATCHES";
-    LoadType["LOAD_FAILED"] = "LOAD_FAILED";
+    /**
+     * A single track is loaded.
+     */
+    LoadType["TrackLoaded"] = "TRACK_LOADED";
+    /**
+     * A playlist is loaded.
+     */
+    LoadType["PlaylistLoaded"] = "PLAYLIST_LOADED";
+    /**
+     * A search result is made (i.e `ytsearch: some song`).
+     */
+    LoadType["SearchResult"] = "SEARCH_RESULT";
+    /**
+     * No matches/sources could be found for a given identifier.
+     */
+    LoadType["NoMatches"] = "NO_MATCHES";
+    /**
+     * Lavaplayer failed to load something for some reason.
+     */
+    LoadType["LoadFailed"] = "LOAD_FAILED";
 })(LoadType || (LoadType = {}));
 export class Http {
     constructor(node, input, base) {

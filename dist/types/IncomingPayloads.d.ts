@@ -43,19 +43,77 @@ export interface IncomingEventTrackEndPayload extends IIncomingEvent {
     track: string;
     reason: string;
 }
-export declare type IncomingEventTrackExceptionPayload = IncomingEventTrackExceptionDetailed | IncomingEventTrackExceptionErrorPayload;
-interface IIncomingEventTrackException extends IIncomingEvent {
+export interface IncomingEventTrackExceptionPayload extends IIncomingEvent {
     type: 'TrackExceptionEvent';
+    /**
+     * The track that received the exception.
+     */
     track: string;
-}
-export interface IncomingEventTrackExceptionDetailed extends IIncomingEventTrackException {
+    /**
+     * The exception's details.
+     */
     exception: {
+        /**
+         * The message explaining the cause of the exception.
+         * @example
+         * ```json
+         * "The uploader has not made this video available in your country."
+         * ```
+         */
         message: string;
-        severity: IncomingEventTrackExceptionDetailedExceptionSeverity;
+        /**
+         * The severity of the exception.
+         * @example
+         * ```json
+         * "COMMON"
+         * ```
+         */
+        severity: ExceptionSeverity;
+        /**
+         * The cause for the exception.
+         */
         cause: string;
     };
 }
-export declare const enum IncomingEventTrackExceptionDetailedExceptionSeverity {
+export interface IncomingEventTrackStuckPayload extends IIncomingEvent {
+    type: 'TrackStuckEvent';
+    /**
+     * The track that got stuck.
+     */
+    track: string;
+    /**
+     * The threshold in milliseconds at which the track will resume.
+     */
+    thresholdMs: number;
+}
+export interface IncomingEventWebSocketClosedPayload extends IIncomingEvent {
+    type: 'WebSocketClosedEvent';
+    /**
+     * The closing error code from the websocket.
+     * @example
+     * ```json
+     * 4006
+     * ```
+     */
+    code: number;
+    /**
+     * The reason the websocket was closed.
+     * @example
+     * ```json
+     * "Your session is no longer valid."
+     * ```
+     */
+    reason: string;
+    /**
+     * Whether or not the websocket was closed by Discord.
+     * @example
+     * ```json
+     * true
+     * ```
+     */
+    byRemote: boolean;
+}
+export declare const enum ExceptionSeverity {
     /**
      * The cause is known and expected, indicates that there is nothing wrong with the library itself.
      */
@@ -71,20 +129,6 @@ export declare const enum IncomingEventTrackExceptionDetailedExceptionSeverity {
      * about the error.
      */
     Fault = "FAULT"
-}
-export interface IncomingEventTrackExceptionErrorPayload extends IIncomingEventTrackException {
-    error: string;
-}
-export interface IncomingEventTrackStuckPayload extends IIncomingEvent {
-    type: 'TrackStuckEvent';
-    track: string;
-    thresholdMs: number;
-}
-export interface IncomingEventWebSocketClosedPayload extends IIncomingEvent {
-    type: 'WebSocketClosedEvent';
-    code: number;
-    reason: string;
-    byRemote: boolean;
 }
 export {};
 //# sourceMappingURL=IncomingPayloads.d.ts.map
