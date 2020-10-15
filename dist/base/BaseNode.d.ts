@@ -9,7 +9,7 @@ export declare type VoiceStateUpdate = GatewayVoiceState;
 /**
  * The options for the node.
  */
-export interface BaseNodeOptions {
+export interface NodeOptions {
     /**
      * The password to use to login to the Lavalink server.
      * @example
@@ -93,10 +93,14 @@ export declare abstract class BaseNode extends EventEmitter {
     players: PlayerStore<this>;
     http: Http | null;
     connection: Connection | null;
-    voiceStates: Map<string, VoiceStateUpdate>;
-    voiceServers: Map<string, VoiceServerUpdate>;
+    voiceStates: Map<string, GatewayVoiceState>;
+    voiceServers: Map<string, {
+        token: string;
+        guild_id: string;
+        endpoint: string;
+    }>;
     private _expectingConnection;
-    constructor({ password, userID, shardCount, hosts, host }: BaseNodeOptions);
+    constructor({ password, userID, shardCount, hosts, host }: NodeOptions);
     /**
      * Connects to the server.
      */
