@@ -100,7 +100,7 @@ export declare abstract class BaseNode extends EventEmitter {
     /**
      * Connects to the server.
      */
-    connect(): void;
+    connect(): Promise<void>;
     /**
      * Whether or not the node is connected to the websocket.
      */
@@ -194,7 +194,7 @@ export declare abstract class BaseNode extends EventEmitter {
     decode(tracks: string[]): Promise<Track[]>;
     voiceStateUpdate(packet: VoiceStateUpdate): Promise<boolean>;
     voiceServerUpdate(packet: VoiceServerUpdate): Promise<boolean>;
-    disconnect(code?: number, data?: string): Promise<void>;
+    disconnect(code?: number, data?: string): Promise<boolean>;
     destroy(code?: number, data?: string): Promise<void>;
     private _tryConnection;
 }

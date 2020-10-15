@@ -23,10 +23,10 @@ export declare class Connection<T extends BaseNode = BaseNode> {
     /**
      * Connects to the server.
      */
-    connect(): void;
+    connect(): Promise<void>;
     configureResuming(timeout?: number, key?: string): Promise<void>;
     send(d: OutgoingPayload): Promise<void>;
-    close(code?: number, data?: string): Promise<void>;
+    close(code?: number, data?: string): Promise<boolean>;
     private _connect;
     private _reconnect;
     private _registerWSEventListeners;

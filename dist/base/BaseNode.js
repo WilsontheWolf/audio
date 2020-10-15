@@ -35,7 +35,7 @@ class BaseNode extends events_1.EventEmitter {
      * Connects to the server.
      */
     connect() {
-        this.connection.connect();
+        return this.connection.connect();
     }
     /**
      * Whether or not the node is connected to the websocket.
@@ -131,7 +131,7 @@ class BaseNode extends events_1.EventEmitter {
     disconnect(code, data) {
         if (this.connection)
             return this.connection.close(code, data);
-        return Promise.resolve();
+        return Promise.resolve(false);
     }
     async destroy(code, data) {
         await Promise.all([...this.players.values()].map((player) => player.destroy()));

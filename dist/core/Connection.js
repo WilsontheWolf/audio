@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Connection = void 0;
 const backoff_1 = require("backoff");
+const events_1 = require("events");
 const ws_1 = require("ws");
 class Connection {
     constructor(node, url, options = {}) {
@@ -23,10 +24,15 @@ class Connection {
      * Connects to the server.
      */
     connect() {
-        // Create a new ready listener if none was set.
-        if (!this.backoff.listenerCount('ready')) {
-            this.backoff.on('ready', () => this._connect());
-        }
+        return new Promise((resolve, reject) => {
+            // Create a new ready listener if none was set.
+            if (this.backoff.listenerCount('ready')) {
+                resolve();
+            }
+            else {
+                this.backoff.on('ready', () => this._connect().then(resolve, reject));
+            }
+        });
     }
     configureResuming(timeout = 60, key = Math.random().toString(36)) {
         this.resumeKey = key;
@@ -48,24 +54,24 @@ class Connection {
                 this._queue.push(send);
         });
     }
-    close(code, data) {
+    async close(code, data) {
         if (!this.ws)
-            return Promise.resolve();
+            return false;
         this.ws.removeListener('close', this._close);
-        return new Promise((resolve) => {
-            this.ws.once('close', (code, reason) => {
-                this.node.emit('close', code, reason);
-                this.backoff.removeAllListeners();
-                this.ws = null;
-                resolve();
-            });
-            this.ws.close(code, data);
-        });
+        this.ws.close(code, data);
+        this.node.emit('close', ...(await events_1.once(this.ws, 'close')));
+        this.backoff.removeAllListeners();
+        this.ws.removeAllListeners();
+        this.ws = null;
+        return true;
     }
-    _connect() {
+    async _connect() {
         var _a;
-        if (((_a = this.ws) === null || _a === void 0 ? void 0 : _a.readyState) === ws_1.default.OPEN)
+        if (((_a = this.ws) === null || _a === void 0 ? void 0 : _a.readyState) === ws_1.default.OPEN) {
             this.ws.close();
+            this.ws.removeAllListeners();
+            this.node.emit('close', ...(await events_1.once(this.ws, 'close')));
+        }
         const headers = {
             Authorization: this.node.password,
             'Num-Shards': this.node.shardCount || 1,
@@ -73,8 +79,31 @@ class Connection {
         };
         if (this.resumeKey)
             headers['Resume-Key'] = this.resumeKey;
-        this.ws = new ws_1.default(this.url, { headers, ...this.options });
+        const ws = new ws_1.default(this.url, { headers, ...this.options });
+        this.ws = ws;
         this._registerWSEventListeners();
+        return new Promise((resolve, reject) => {
+            function onOpen() {
+                resolve();
+                cleanup();
+            }
+            function onError(error) {
+                reject(error);
+                cleanup();
+            }
+            function onClose(code, reason) {
+                reject(new Error(`Closed connection with code ${code} and reason ${reason}`));
+                cleanup();
+            }
+            function cleanup() {
+                ws.off('open', onOpen);
+                ws.off('error', onError);
+                ws.off('close', onClose);
+            }
+            ws.on('open', onOpen);
+            ws.on('error', onError);
+            ws.on('close', onClose);
+        });
     }
     _reconnect() {
         if (this.ws.readyState === ws_1.default.CLOSED)
