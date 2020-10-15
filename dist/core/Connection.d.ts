@@ -1,4 +1,4 @@
-import WebSocket from 'ws';
+import * as WebSocket from 'ws';
 import type { BaseNode } from '../base/BaseNode';
 import type { OutgoingPayload } from '../types/OutgoingPayloads';
 export interface Options extends WebSocket.ClientOptions {

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Connection = void 0;
 const backoff_1 = require("backoff");
 const events_1 = require("events");
-const ws_1 = require("ws");
+const WebSocket = require("ws");
 class Connection {
     constructor(node, url, options = {}) {
         this.backoff = backoff_1.exponential();
@@ -24,15 +24,11 @@ class Connection {
      * Connects to the server.
      */
     connect() {
-        return new Promise((resolve, reject) => {
-            // Create a new ready listener if none was set.
-            if (this.backoff.listenerCount('ready')) {
-                resolve();
-            }
-            else {
-                this.backoff.on('ready', () => this._connect().then(resolve, reject));
-            }
-        });
+        // Create a new ready listener if none was set.
+        if (!this.backoff.listenerCount('ready')) {
+            this.backoff.on('ready', () => this._connect());
+        }
+        return this._connect();
     }
     configureResuming(timeout = 60, key = Math.random().toString(36)) {
         this.resumeKey = key;
@@ -48,7 +44,7 @@ class Connection {
         return new Promise((resolve, reject) => {
             const encoded = JSON.stringify(d);
             const send = { resolve, reject, data: encoded };
-            if (this.ws.readyState === ws_1.default.OPEN)
+            if (this.ws.readyState === WebSocket.OPEN)
                 this.wsSend(send);
             else
                 this._queue.push(send);
@@ -67,7 +63,7 @@ class Connection {
     }
     async _connect() {
         var _a;
-        if (((_a = this.ws) === null || _a === void 0 ? void 0 : _a.readyState) === ws_1.default.OPEN) {
+        if (((_a = this.ws) === null || _a === void 0 ? void 0 : _a.readyState) === WebSocket.OPEN) {
             this.ws.close();
             this.ws.removeAllListeners();
             this.node.emit('close', ...(await events_1.once(this.ws, 'close')));
@@ -79,7 +75,7 @@ class Connection {
         };
         if (this.resumeKey)
             headers['Resume-Key'] = this.resumeKey;
-        const ws = new ws_1.default(this.url, { headers, ...this.options });
+        const ws = new WebSocket(this.url, { headers, ...this.options });
         this.ws = ws;
         this._registerWSEventListeners();
         return new Promise((resolve, reject) => {
@@ -106,7 +102,7 @@ class Connection {
         });
     }
     _reconnect() {
-        if (this.ws.readyState === ws_1.default.CLOSED)
+        if (this.ws.readyState === WebSocket.CLOSED)
             this.backoff.backoff();
     }
     _registerWSEventListeners() {
