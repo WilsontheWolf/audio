@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClusterNode = void 0;
 const BaseNode_1 = require("./base/BaseNode");
+require("./core/Connection");
 class ClusterNode extends BaseNode_1.BaseNode {
     constructor(cluster, options) {
         super(options);
@@ -9,12 +10,13 @@ class ClusterNode extends BaseNode_1.BaseNode {
         this.tags = new Set(options.tags || []);
         this.send = this.cluster.send.bind(this.cluster);
         this.stats = null;
-        this.on('stats', (stats) => (this.stats = stats));
+        this.on("stats" /* Stats */, (stats) => (this.stats = stats));
     }
-    emit(name, ...args) {
+    emit(event, ...args) {
+        // @ts-expect-error Expect same arguments as parent.
         if (this.listenerCount(name))
             super.emit(name, ...args);
-        return this.cluster.emit(name, ...args);
+        return this.cluster.emit(event, ...args);
     }
     async destroy(code, data) {
         await super.destroy(code, data);

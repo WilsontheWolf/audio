@@ -91,11 +91,11 @@ export interface OutgoingConfigureResumingPayload {
     /**
      * The string you will need to send when resuming the session. Set to null to disable resuming altogether.
      */
-    key: string;
+    key?: string | null;
     /**
      * The number of seconds after disconnecting before the session is closed anyways.
      * This is useful for avoiding accidental leaks.
      */
-    timeout: number;
+    timeout?: number;
 }
 //# sourceMappingURL=OutgoingPayloads.d.ts.map

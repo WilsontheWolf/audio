@@ -148,4 +148,5 @@ class BaseNode extends events_1.EventEmitter {
     }
 }
 exports.BaseNode = BaseNode;
+/* eslint-enable @typescript-eslint/unified-signatures */
 //# sourceMappingURL=BaseNode.js.map

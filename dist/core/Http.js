@@ -51,6 +51,10 @@ class Http {
     get url() {
         return new url_1.URL(this.input, this.base);
     }
+    /**
+     * Loads a track by its identifier.
+     * @param identifier The track to be loaded.
+     */
     load(identifier) {
         const { url } = this;
         url.pathname = '/loadtracks';

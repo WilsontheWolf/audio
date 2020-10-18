@@ -225,6 +225,10 @@ export declare class Http {
     routeplanner: RoutePlanner;
     constructor(node: BaseNode, input: string, base?: string);
     get url(): URL;
+    /**
+     * Loads a track by its identifier.
+     * @param identifier The track to be loaded.
+     */
     load(identifier: string): Promise<TrackResponse>;
     /**
      * Decodes a track.
