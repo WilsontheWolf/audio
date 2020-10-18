@@ -26,7 +26,9 @@ class Connection {
     connect() {
         // Create a new ready listener if none was set.
         if (!this.backoff.listenerCount('ready')) {
-            this.backoff.on('ready', () => this._connect());
+            return new Promise((resolve, reject) => {
+                this.backoff.on('ready', () => this._connect().then(resolve, reject));
+            });
         }
         return this._connect();
     }
@@ -79,15 +81,19 @@ class Connection {
         this.ws = ws;
         this._registerWSEventListeners();
         return new Promise((resolve, reject) => {
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            const self = this;
             function onOpen() {
                 resolve();
                 cleanup();
             }
             function onError(error) {
+                self.ws = null;
                 reject(error);
                 cleanup();
             }
             function onClose(code, reason) {
+                self.ws = null;
                 reject(new Error(`Closed connection with code ${code} and reason ${reason}`));
                 cleanup();
             }
