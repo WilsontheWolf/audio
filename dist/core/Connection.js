@@ -26,9 +26,7 @@ class Connection {
     connect() {
         // Create a new ready listener if none was set.
         if (!this.backoff.listenerCount('ready')) {
-            return new Promise((resolve, reject) => {
-                this.backoff.on('ready', () => this._connect().then(resolve, reject));
-            });
+            this.backoff.on('ready', () => this._connect());
         }
         return this._connect();
     }

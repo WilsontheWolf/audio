@@ -11,8 +11,7 @@ class BaseCluster extends events_1.EventEmitter {
             this.spawn(options);
     }
     connect() {
-        for (const node of this.nodes)
-            node.connect();
+        return Promise.all(this.nodes.map((node) => node.connect()));
     }
     spawn(options) {
         if (Array.isArray(options))
