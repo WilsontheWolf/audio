@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseNode = void 0;
 const events_1 = require("events");
-const ws_1 = require("ws");
+const WebSocket = require("ws");
 const Connection_1 = require("../core/Connection");
 const Http_1 = require("../core/Http");
 const PlayerStore_1 = require("../core/PlayerStore");
@@ -42,7 +42,7 @@ class BaseNode extends events_1.EventEmitter {
      */
     get connected() {
         var _a, _b;
-        return ((_b = (_a = this.connection) === null || _a === void 0 ? void 0 : _a.ws) === null || _b === void 0 ? void 0 : _b.readyState) === ws_1.default.OPEN;
+        return ((_b = (_a = this.connection) === null || _a === void 0 ? void 0 : _a.ws) === null || _b === void 0 ? void 0 : _b.readyState) === WebSocket.OPEN;
     }
     /**
      * Loads a song.
