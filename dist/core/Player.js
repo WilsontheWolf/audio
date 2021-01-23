@@ -88,30 +88,41 @@ class Player extends events_1.EventEmitter {
         };
         return this.node.send(this.guildID, data);
     }
-    async play(track, { start = 0, end = 0, noReplace = false } = {}) {
+    async play(track, { start, end, noReplace, pause } = {}) {
         await this.send({
             op: 'play',
             guildId: this.guildID,
             track: typeof track === 'object' ? track.track : track,
             startTime: start,
             endTime: end,
-            noReplace
+            noReplace,
+            pause
         });
-        this.status = 1 /* Playing */;
+        if (pause)
+            this.status = 2 /* Paused */;
+        else
+            this.status = 1 /* Playing */;
     }
+    setFilters(options) {
+        return this.send({
+            op: 'filters',
+            guildId: this.guildID,
+            ...options
+        });
+    }
+    /**
+     * @deprecated Please use `setFilters({ volume })` instead.
+     * @param volume The new volume to be set.
+     */
     setVolume(volume) {
-        return this.send({
-            op: 'volume',
-            guildId: this.guildID,
-            volume
-        });
+        return this.setFilters({ volume });
     }
+    /**
+     * @deprecated Please use `setFilters({ bands })` instead.
+     * @param bands The equalizer bads to be set.
+     */
     setEqualizer(bands) {
-        return this.send({
-            op: 'equalizer',
-            guildId: this.guildID,
-            bands
-        });
+        return this.setFilters({ bands });
     }
     seek(position) {
         return this.send({

@@ -152,6 +152,7 @@ class Connection {
         const headers = {
             Authorization: this.node.password,
             'Num-Shards': this.node.shardCount || 1,
+            'Client-Name': '@skyra/audio',
             'User-Id': this.node.userID
         };
         if (this.resumeKey)

@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { EventEmitter } from 'events';
 import type { BaseNode, VoiceServerUpdate, VoiceStateUpdate } from '../base/BaseNode';
-import type { OutgoingEqualizerPayload, OutgoingPayload } from '../types/OutgoingPayloads';
+import type { EqualizerBand, OutgoingFilterPayload, OutgoingPayload } from '../types/OutgoingPayloads';
 import type { Track } from './Http';
 export declare const enum Status {
     Instantiated = 0,
@@ -16,8 +16,10 @@ export interface PlayerOptions {
     start?: number;
     end?: number;
     noReplace?: boolean;
+    pause?: boolean;
 }
-export declare type EqualizerBand = OutgoingEqualizerPayload['bands'];
+export interface FilterOptions extends Omit<OutgoingFilterPayload, 'op' | 'guildId'> {
+}
 export interface JoinOptions {
     mute?: boolean;
     deaf?: boolean;
@@ -34,9 +36,18 @@ export declare class Player<T extends BaseNode = BaseNode> extends EventEmitter 
     moveTo(node: BaseNode): Promise<void>;
     leave(): Promise<any>;
     join(channel: string | null, { deaf, mute }?: JoinOptions): Promise<any>;
-    play(track: string | Track, { start, end, noReplace }?: PlayerOptions): Promise<void>;
+    play(track: string | Track, { start, end, noReplace, pause }?: PlayerOptions): Promise<void>;
+    setFilters(options: FilterOptions): Promise<void>;
+    /**
+     * @deprecated Please use `setFilters({ volume })` instead.
+     * @param volume The new volume to be set.
+     */
     setVolume(volume: number): Promise<void>;
-    setEqualizer(bands: EqualizerBand): Promise<void>;
+    /**
+     * @deprecated Please use `setFilters({ bands })` instead.
+     * @param bands The equalizer bads to be set.
+     */
+    setEqualizer(bands: readonly EqualizerBand[]): Promise<void>;
     seek(position: number): Promise<void>;
     pause(pause?: boolean): Promise<void>;
     stop(): Promise<void>;
