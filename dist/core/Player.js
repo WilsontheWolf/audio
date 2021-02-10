@@ -119,10 +119,10 @@ class Player extends events_1.EventEmitter {
     }
     /**
      * @deprecated Please use `setFilters({ bands })` instead.
-     * @param bands The equalizer bads to be set.
+     * @param equalizer The equalizer bads to be set.
      */
-    setEqualizer(bands) {
-        return this.setFilters({ bands });
+    setEqualizer(equalizer) {
+        return this.setFilters({ equalizer });
     }
     seek(position) {
         return this.send({

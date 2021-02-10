@@ -45,9 +45,9 @@ export declare class Player<T extends BaseNode = BaseNode> extends EventEmitter 
     setVolume(volume: number): Promise<void>;
     /**
      * @deprecated Please use `setFilters({ bands })` instead.
-     * @param bands The equalizer bads to be set.
+     * @param equalizer The equalizer bads to be set.
      */
-    setEqualizer(bands: readonly EqualizerBand[]): Promise<void>;
+    setEqualizer(equalizer: readonly EqualizerBand[]): Promise<void>;
     seek(position: number): Promise<void>;
     pause(pause?: boolean): Promise<void>;
     stop(): Promise<void>;
