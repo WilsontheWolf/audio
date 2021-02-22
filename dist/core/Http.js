@@ -7,6 +7,30 @@ const RoutePlanner_1 = require("./RoutePlanner");
 class HTTPError extends Error {
     constructor(httpMessage, method, url) {
         super(`${httpMessage.statusCode} ${http_1.STATUS_CODES[httpMessage.statusCode]}`);
+        Object.defineProperty(this, "method", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "statusCode", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "headers", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "path", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         this.statusCode = httpMessage.statusCode;
         this.headers = httpMessage.headers;
         this.name = this.constructor.name;
@@ -43,6 +67,30 @@ var LoadType;
 })(LoadType = exports.LoadType || (exports.LoadType = {}));
 class Http {
     constructor(node, input, base) {
+        Object.defineProperty(this, "node", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "input", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "base", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "routeplanner", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         this.node = node;
         this.input = input;
         this.base = base;

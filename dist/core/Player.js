@@ -15,7 +15,24 @@ var Status;
 class Player extends events_1.EventEmitter {
     constructor(node, guildID) {
         super();
-        this.status = 0 /* Instantiated */;
+        Object.defineProperty(this, "node", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "guildID", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "status", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 0 /* Instantiated */
+        });
         this.node = node;
         this.guildID = guildID;
         this.on('event', (d) => {

@@ -6,7 +6,24 @@ const ClusterNode_1 = require("../ClusterNode");
 class BaseCluster extends events_1.EventEmitter {
     constructor(options) {
         super();
-        this.nodes = [];
+        Object.defineProperty(this, "send", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "filter", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "nodes", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: []
+        });
         if (options)
             this.spawn(options);
     }

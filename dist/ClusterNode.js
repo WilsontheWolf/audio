@@ -6,7 +6,30 @@ require("./core/Connection");
 class ClusterNode extends BaseNode_1.BaseNode {
     constructor(cluster, options) {
         super(options);
-        this.cluster = cluster;
+        Object.defineProperty(this, "cluster", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: cluster
+        });
+        Object.defineProperty(this, "tags", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "send", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "stats", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         this.tags = new Set(options.tags || []);
         this.send = this.cluster.send.bind(this.cluster);
         this.stats = null;

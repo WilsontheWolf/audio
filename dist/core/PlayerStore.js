@@ -8,6 +8,15 @@ const Player_1 = require("./Player");
 class PlayerStore extends Map {
     constructor(node) {
         super();
+        /**
+         * The [[Node]] or [[ClusterNode]] that created this store.
+         */
+        Object.defineProperty(this, "node", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         this.node = node;
     }
     /**

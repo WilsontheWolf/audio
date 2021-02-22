@@ -3,7 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoutePlanner = void 0;
 class RoutePlanner {
     constructor(http) {
-        this.http = http;
+        Object.defineProperty(this, "http", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: http
+        });
     }
     status() {
         const { url } = this.http;

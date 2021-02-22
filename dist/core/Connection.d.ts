@@ -1,4 +1,4 @@
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 import type { BaseNode } from '../base/BaseNode';
 import type { OutgoingPayload } from '../types/OutgoingPayloads';
 export declare const enum WebSocketEvents {

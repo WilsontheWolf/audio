@@ -12,12 +12,15 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }
     return privateMap.get(receiver);
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var _backoff, _queue, _send, _open, _close, _upgrade, _message, _error;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Connection = exports.ConnectionEvents = exports.WebSocketEvents = void 0;
 const backoff_1 = require("backoff");
 const events_1 = require("events");
-const WebSocket = require("ws");
+const ws_1 = __importDefault(require("ws"));
 var WebSocketEvents;
 (function (WebSocketEvents) {
     WebSocketEvents["Open"] = "open";
@@ -39,6 +42,51 @@ var ConnectionEvents;
 class Connection {
     /* eslint-enable @typescript-eslint/explicit-member-accessibility */
     constructor(node, url, options = {}) {
+        /**
+         * The node that owns this connection.
+         */
+        Object.defineProperty(this, "node", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        /**
+         * The url the connection connects to.
+         */
+        Object.defineProperty(this, "url", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        /**
+         * The websocket options.
+         */
+        Object.defineProperty(this, "options", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        /**
+         * The resume key, check [[Options.resumeKey]] for more information.
+         */
+        Object.defineProperty(this, "resumeKey", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        /**
+         * The websocket connection.
+         */
+        Object.defineProperty(this, "ws", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         /* eslint-disable @typescript-eslint/explicit-member-accessibility */
         /**
          * The back-off queue.
@@ -118,7 +166,7 @@ class Connection {
         return new Promise((resolve, reject) => {
             const encoded = JSON.stringify(payload);
             const send = { resolve, reject, data: encoded };
-            if (this.ws.readyState === WebSocket.OPEN)
+            if (this.ws.readyState === ws_1.default.OPEN)
                 this.wsSend(send);
             else
                 __classPrivateFieldGet(this, _queue).push(send);
@@ -143,7 +191,7 @@ class Connection {
     }
     async _connect() {
         var _a;
-        if (((_a = this.ws) === null || _a === void 0 ? void 0 : _a.readyState) === WebSocket.OPEN) {
+        if (((_a = this.ws) === null || _a === void 0 ? void 0 : _a.readyState) === ws_1.default.OPEN) {
             this.ws.close();
             this.ws.removeAllListeners();
             // @ts-expect-error Arguments are passed, TypeScript just does not recognize them.
@@ -157,7 +205,7 @@ class Connection {
         };
         if (this.resumeKey)
             headers['Resume-Key'] = this.resumeKey;
-        const ws = new WebSocket(this.url, { headers, ...this.options });
+        const ws = new ws_1.default(this.url, { headers, ...this.options });
         this.ws = ws;
         this._registerWSEventListeners();
         return new Promise((resolve, reject) => {
@@ -188,7 +236,7 @@ class Connection {
         });
     }
     _reconnect() {
-        if (!this.ws || this.ws.readyState === WebSocket.CLOSED)
+        if (!this.ws || this.ws.readyState === ws_1.default.CLOSED)
             __classPrivateFieldGet(this, _backoff).backoff();
     }
     _registerWSEventListeners() {
