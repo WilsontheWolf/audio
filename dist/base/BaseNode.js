@@ -28,12 +28,6 @@ const PlayerStore_1 = require("../core/PlayerStore");
 class BaseNode extends events_1.EventEmitter {
     constructor({ password, userID, shardCount, hosts, host }) {
         super();
-        Object.defineProperty(this, "send", {
-            enumerable: true,
-            configurable: true,
-            writable: true,
-            value: void 0
-        });
         Object.defineProperty(this, "password", {
             enumerable: true,
             configurable: true,
