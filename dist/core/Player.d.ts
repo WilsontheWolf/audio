@@ -34,17 +34,20 @@ export declare class Player<T extends BaseNode = BaseNode> extends EventEmitter 
     get voiceState(): VoiceStateUpdate | null;
     get voiceServer(): VoiceServerUpdate | null;
     moveTo(node: BaseNode): Promise<void>;
-    leave(): Promise<any>;
-    join(channel: string | null, { deaf, mute }?: JoinOptions): Promise<any>;
+    leave(): Promise<void>;
+    join(channel: string | null, { deaf, mute }?: JoinOptions): Promise<void>;
     play(track: string | Track, { start, end, noReplace, pause }?: PlayerOptions): Promise<void>;
+    /**
+     * Sets the filters for the player.
+     * @note This is not available in Lavalink v3.3.
+     * @param options The filters to be sent.
+     */
     setFilters(options: FilterOptions): Promise<void>;
     /**
-     * @deprecated Please use `setFilters({ volume })` instead.
      * @param volume The new volume to be set.
      */
     setVolume(volume: number): Promise<void>;
     /**
-     * @deprecated Please use `setFilters({ bands })` instead.
      * @param equalizer The equalizer bads to be set.
      */
     setEqualizer(equalizer: readonly EqualizerBand[]): Promise<void>;

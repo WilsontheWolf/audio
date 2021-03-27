@@ -120,6 +120,11 @@ class Player extends events_1.EventEmitter {
         else
             this.status = 1 /* Playing */;
     }
+    /**
+     * Sets the filters for the player.
+     * @note This is not available in Lavalink v3.3.
+     * @param options The filters to be sent.
+     */
     setFilters(options) {
         return this.send({
             op: 'filters',
@@ -128,18 +133,24 @@ class Player extends events_1.EventEmitter {
         });
     }
     /**
-     * @deprecated Please use `setFilters({ volume })` instead.
      * @param volume The new volume to be set.
      */
     setVolume(volume) {
-        return this.setFilters({ volume });
+        return this.send({
+            op: 'volume',
+            guildId: this.guildID,
+            volume
+        });
     }
     /**
-     * @deprecated Please use `setFilters({ bands })` instead.
      * @param equalizer The equalizer bads to be set.
      */
     setEqualizer(equalizer) {
-        return this.setFilters({ equalizer });
+        return this.send({
+            op: 'equalizer',
+            guildId: this.guildID,
+            bands: equalizer
+        });
     }
     seek(position) {
         return this.send({
